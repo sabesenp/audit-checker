@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
-from auditchecker.reconcile import reconcile
+from src.auditchecker.reconcile import reconcile
+
 
 def main():
     ap = argparse.ArgumentParser(description="Audit Checker: reconcile two CSV/Excel files and output exceptions.")
