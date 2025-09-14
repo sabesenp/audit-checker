@@ -28,9 +28,44 @@ def main():
 
     with open(out_dir / "summary.txt", "w", encoding="utf-8") as f:
         for k, v in result["summary"].items():
-            f.write(f"{k}: {v}\\n")
+            f.write(f"{k}: {v}\n")
 
     print("Reconciliation complete. See output folder.")
 
+        # --- HTML report ---
+    html = f"""
+    <html><head><meta charset="utf-8">
+    <title>Audit Checker Report</title>
+    <style>
+    body{{font-family:Arial, sans-serif; padding:20px}}
+    table{{border-collapse:collapse; margin:14px 0}}
+    th,td{{border:1px solid #ddd; padding:6px 8px}}
+    h1,h2,h3{{margin:12px 0}}
+    pre{{background:#fafafa; border:1px solid #eee; padding:12px; white-space:pre-wrap}}
+    .badge{{display:inline-block; padding:2px 8px; border-radius:12px; background:#eef; margin-left:8px}}
+    </style>
+    </head><body>
+    <h1>Audit Checker Report <span class="badge">{Path(args.a).name} vs {Path(args.b).name}</span></h1>
+    <h3>Summary</h3>
+    <pre>{(out_dir / "summary.txt").read_text(encoding="utf-8")}</pre>
+
+    <h3>Mismatches</h3>
+    {result["mismatches"].to_html(index=False)}
+    <h3>Missing in B</h3>
+    {result["missing_in_b"].to_html(index=False)}
+    <h3>Missing in A</h3>
+    {result["missing_in_a"].to_html(index=False)}
+    <h3>Duplicates A</h3>
+    {result["duplicates_a"].to_html(index=False)}
+    <h3>Duplicates B</h3>
+    {result["duplicates_b"].to_html(index=False)}
+    </body></html>
+    """
+    (out_dir / "report.html").write_text(html, encoding="utf-8")
+    print(f"HTML report saved to {out_dir / 'report.html'}")
+
+
 if __name__ == "__main__":
     main()
+
+

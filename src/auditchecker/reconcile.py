@@ -12,6 +12,12 @@ def _read(path: str) -> pd.DataFrame:
     else:
         raise ValueError(f"Unsupported file type: {path}")
     
+def _as_float(s):
+    try:
+        return float(str(s).replace(",", "").replace("$", "").strip())
+    except Exception:
+        return None
+    
 
 #normalize specified columns by case folding and/or stripping whitespace
 def _normalize(df: pd.DataFrame, cols: List[str], casefold: bool, strip: bool) -> pd.DataFrame:
